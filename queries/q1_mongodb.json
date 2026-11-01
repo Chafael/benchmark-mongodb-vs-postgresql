@@ -1,0 +1,15 @@
+[
+  { "$unwind": "$fuentes" },
+  { "$match": { "fuentes.estado": "ok" } },
+  {
+    "$group": {
+      "_id": {
+        "fuente": "$fuentes.nombre",
+        "categoria": "$veredicto.categoria"
+      },
+      "detecciones_totales": { "$sum": "$fuentes.respuesta.detecciones" },
+      "latencia_promedio_ms": { "$avg": "$fuentes.latenciaMs" },
+      "consultas": { "$sum": 1 }
+    }
+  }
+]

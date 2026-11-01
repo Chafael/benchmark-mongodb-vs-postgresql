@@ -1,0 +1,86 @@
+# Uso:
+#   docker compose --env-file versions.env --env-file profiles/PROFILE_A_BASELINE.env --profile telemetry up -d
+#   docker compose --env-file versions.env --env-file profiles/PROFILE_A_BASELINE.env --profile mongodb up -d
+# Solo se levanta UN motor a la vez para que no compitan por recursos.
+
+services:
+  mongodb:
+    image: ${MONGO_IMAGE}
+    container_name: bench-mongodb
+    profiles: ["mongodb"]
+    cpus: ${CPUS}
+    mem_limit: ${MEM_LIMIT}
+    memswap_limit: ${MEM_LIMIT}        # igual a mem_limit = sin swap (en cgroups v2 Docker ignora mem_swappiness)
+    mem_swappiness: ${MEM_SWAPPINESS}
+    restart: "no"                      # si el kernel lo mata por OOM, que no se levante solo y se esconda el OOM
+    ports: ["27018:27017"]     # 27018 en Windows para no chocar con un MongoDB instalado localmente
+    volumes:
+      - mongo-data:/data/db
+    command: ["mongod", "--bind_ip_all", "--slowms", "100"]
+
+  postgresql:
+    image: ${POSTGRES_IMAGE}
+    container_name: bench-postgresql
+    profiles: ["postgresql"]
+    cpus: ${CPUS}
+    mem_limit: ${MEM_LIMIT}
+    memswap_limit: ${MEM_LIMIT}
+    mem_swappiness: ${MEM_SWAPPINESS}
+    restart: "no"
+    environment:
+      POSTGRES_USER: bench
+      POSTGRES_PASSWORD: bench
+      POSTGRES_DB: bench
+    ports: ["5433:5432"]       # 5433 en Windows para no chocar con un PostgreSQL instalado localmente
+    volumes:
+      - pg-data:/var/lib/postgresql     # Postgres 18 guarda en /var/lib/postgresql/18/docker
+    # log_temp_files=0 deja en el log cada archivo temporal = evidencia de spill a disco
+    command: ["postgres", "-c", "log_temp_files=0"]
+
+  # ---------- Telemetria (playbook, seccion 7) ----------
+  cadvisor:
+    image: ${CADVISOR_IMAGE}
+    container_name: bench-cadvisor
+    profiles: ["telemetry"]
+    privileged: true
+    devices: ["/dev/kmsg"]
+    cpus: 0.5                          # recursos acotados para no robarle al motor medido
+    mem_limit: 256m
+    command: ["--docker_only=true", "--housekeeping_interval=1s", "--store_container_labels=false"]
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+      - /dev/disk/:/dev/disk:ro
+    ports: ["8080:8080"]
+
+  node-exporter:
+    image: ${NODE_EXPORTER_IMAGE}
+    container_name: bench-node-exporter
+    profiles: ["telemetry"]
+    pid: host
+    cpus: 0.25
+    mem_limit: 128m
+    command: ["--path.procfs=/host/proc", "--path.sysfs=/host/sys", "--path.rootfs=/rootfs"]
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    ports: ["9100:9100"]
+
+  prometheus:
+    image: ${PROMETHEUS_IMAGE}
+    container_name: bench-prometheus
+    profiles: ["telemetry"]
+    cpus: 0.5
+    mem_limit: 512m
+    volumes:
+      - ./telemetry/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prom-data:/prometheus
+    ports: ["9090:9090"]
+
+volumes:
+  mongo-data:
+  pg-data:
+  prom-data:

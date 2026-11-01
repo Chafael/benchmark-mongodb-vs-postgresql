@@ -1,0 +1,11 @@
+[
+  { "$match": {
+      "estado": "completo",
+      "fecha": { "$gte": { "$date": "2026-01-01T00:00:00Z" } }
+  } },
+  { "$sort": { "duracionMs": -1 } },
+  { "$limit": 1000 },
+  { "$project": {
+      "urlInicial": 1, "veredicto.categoria": 1, "duracionMs": 1
+  } }
+]

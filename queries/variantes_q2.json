@@ -1,0 +1,5 @@
+{
+  "_nota": "Variantes de estres de memoria de Q2 (playbook 5.2). query_id en el CSV: Q2_V1 = sin disco / memoria baja, Q2_V2 = con disco / memoria alta.",
+  "Q2_V1": { "mongodb": { "allowDiskUse": false }, "postgresql": { "work_mem": "4MB" } },
+  "Q2_V2": { "mongodb": { "allowDiskUse": true },  "postgresql": { "work_mem": "64MB" } }
+}

@@ -1,0 +1,7 @@
+pymongo>=4.10
+psycopg[binary]>=3.2
+numpy>=1.26
+requests>=2.31
+# solo para extras/
+pandas>=2.2
+matplotlib>=3.9

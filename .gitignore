@@ -1,0 +1,7 @@
+data/
+__pycache__/
+.venv/
+results/
+logs/
+extras/salida/
+extras/monitor_cpu.csv
