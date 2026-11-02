@@ -133,7 +133,16 @@ Si se corta (Ctrl+C, apagón, la laptop se suspende), basta con volver a ejecuta
 
 ## Resultados
 
-La matriz completa (162 corridas) se ejecutó del 31 de octubre al 1 de noviembre de 2026 en una laptop con Windows y Docker Desktop. El CSV de mediciones, los logs por corrida, los planes de ejecución y el reporte se entregan aparte del repositorio.
+La matriz completa (162 corridas) se ejecutó del 31 de octubre al 1 de noviembre de 2026 en una laptop con Windows y Docker Desktop. Los resultados de esa ejecución están en el repositorio:
+
+- `results/mediciones.csv`: una fila por corrida (162), con el esquema de la sección 8.2 del playbook. Es el archivo que se compara con el de los demás.
+- `results/estado.json`: el avance que guarda `run_benchmarks.sh` (todas las corridas en `completadas`).
+- `results/EVIDENCIA_SPILL_OOM.md`: las 27 corridas que no terminaron en `ok` (21 spill, 3 OOM, 3 error) con la causa de cada una.
+- `logs/`: un JSON por corrida con el detalle (latencias, errores, fuente de cada métrica, curva de RSS).
+- `logs/planes/`: los planes de ejecución de cada consulta en los perfiles A y C.
+- `extras/salida/`: tabla consolidada, huella M3, costo en la nube y las gráficas del reporte, generadas con `extras/analizar_resultados.py` a partir del CSV.
+
+El CSV global se genera solo: cada corrida del runner agrega su fila a `results/mediciones.csv` al terminar, y los JSON de `logs/` son el detalle de esas mismas filas. Para regenerar las tablas y gráficas basta con `python extras/analizar_resultados.py`.
 
 **Telemetría en esa ejecución.** cAdvisor 0.52.1 no reconoce contenedores cuando Docker Desktop guarda las imágenes con containerd ("failed to identify the read-write layer ID"). Por eso el runner lee el throttling y la CPU de `cpu.stat` y la memoria de `memory.stat` (campo `anon`) directo del cgroup v2 de cada contenedor. Cada log dice de dónde salió cada métrica (`throttling_fuente`, `rss_fuente`).
 

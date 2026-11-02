@@ -1,0 +1,28 @@
+GroupAggregate  (cost=431987.38..516470.62 rows=500000 width=136) (actual time=1062.410..2041.736 rows=12.00 loops=1)
+  Group Key: ((fuente.value ->> 'nombre'::text)), (((analisis.data -> 'veredicto'::text) ->> 'categoria'::text))
+  Buffers: shared hit=76 read=83672, temp read=79054 written=79143
+  ->  Gather Merge  (cost=431987.38..490220.62 rows=500000 width=96) (actual time=1012.878..1570.976 rows=1395045.00 loops=1)
+        Workers Planned: 2
+        Workers Launched: 2
+        Buffers: shared hit=76 read=83672, temp read=79054 written=79143
+        ->  Sort  (cost=430987.36..431508.19 rows=208333 width=96) (actual time=992.029..1079.988 rows=465015.00 loops=3)
+              Sort Key: ((fuente.value ->> 'nombre'::text)), (((analisis.data -> 'veredicto'::text) ->> 'categoria'::text))
+              Sort Method: external merge  Disk: 102088kB
+              Buffers: shared hit=76 read=83672, temp read=79054 written=79143
+              Worker 0:  Sort Method: external merge  Disk: 105024kB
+              Worker 1:  Sort Method: external merge  Disk: 109128kB
+              ->  Nested Loop  (cost=0.01..401900.67 rows=208333 width=96) (actual time=169.580..554.313 rows=465015.00 loops=3)
+                    Buffers: shared read=83672
+                    ->  Parallel Seq Scan on analisis  (cost=0.00..85755.33 rows=208333 width=1232) (actual time=0.228..71.338 rows=166666.67 loops=3)
+                          Buffers: shared read=83672
+                    ->  Function Scan on jsonb_array_elements fuente  (cost=0.01..1.50 rows=1 width=32) (actual time=0.002..0.002 rows=2.79 loops=500000)
+                          Filter: ((value ->> 'estado'::text) = 'ok'::text)
+                          Rows Removed by Filter: 0
+Planning:
+  Buffers: shared hit=209 read=41
+Planning Time: 3.425 ms
+JIT:
+  Functions: 21
+  Options: Inlining true, Optimization true, Expressions true, Deforming true
+  Timing: Generation 1.661 ms (Deform 0.290 ms), Inlining 216.251 ms, Optimization 153.504 ms, Emission 136.669 ms, Total 508.085 ms
+Execution Time: 2282.429 ms

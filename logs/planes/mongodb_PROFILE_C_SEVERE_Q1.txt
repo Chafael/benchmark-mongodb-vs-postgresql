@@ -1,0 +1,183 @@
+{
+  "explainVersion": "1",
+  "stages": [
+    {
+      "$cursor": {
+        "queryPlanner": {
+          "namespace": "enlaceseguro.analisis",
+          "parsedQuery": {},
+          "indexFilterSet": false,
+          "queryHash": "606E85AE",
+          "planCacheShapeHash": "606E85AE",
+          "planCacheKey": "A18A8841",
+          "optimizationTimeMillis": 0,
+          "optimizationTimeMicros": 746,
+          "cursorType": "regular",
+          "maxIndexedOrSolutionsReached": false,
+          "maxIndexedAndSolutionsReached": false,
+          "maxScansToExplodeReached": false,
+          "prunedSimilarIndexes": false,
+          "winningPlan": {
+            "isCached": false,
+            "stage": "PROJECTION_DEFAULT",
+            "transformBy": {
+              "fuentes": 1,
+              "veredicto.categoria": 1,
+              "_id": 0
+            },
+            "inputStage": {
+              "stage": "COLLSCAN",
+              "nss": "enlaceseguro.analisis",
+              "direction": "forward"
+            }
+          },
+          "rejectedPlans": []
+        },
+        "executionStats": {
+          "executionSuccess": true,
+          "nReturned": 500000,
+          "executionTimeMillis": 2237,
+          "executionTimeMicros": 2237954,
+          "totalKeysExamined": 0,
+          "totalDocsExamined": 500000,
+          "executionStages": {
+            "isCached": false,
+            "stage": "PROJECTION_DEFAULT",
+            "nReturned": 500000,
+            "executionTimeMillisEstimate": 427,
+            "works": 500001,
+            "advanced": 500000,
+            "needTime": 0,
+            "needYield": 0,
+            "saveState": 161,
+            "restoreState": 160,
+            "isEOF": 1,
+            "transformBy": {
+              "fuentes": 1,
+              "veredicto.categoria": 1,
+              "_id": 0
+            },
+            "peakTrackedMemBytes": 0,
+            "inputStage": {
+              "stage": "COLLSCAN",
+              "nReturned": 500000,
+              "executionTimeMillisEstimate": 293,
+              "works": 500001,
+              "advanced": 500000,
+              "needTime": 0,
+              "needYield": 0,
+              "saveState": 161,
+              "restoreState": 160,
+              "isEOF": 1,
+              "nss": "enlaceseguro.analisis",
+              "direction": "forward",
+              "docsExamined": 500000,
+              "seeks": 0
+            }
+          }
+        }
+      },
+      "nReturned": 500000,
+      "executionTimeMillisEstimate": 741
+    },
+    {
+      "$unwind": {
+        "path": "$fuentes"
+      },
+      "nReturned": 1500242,
+      "executionTimeMillisEstimate": 948
+    },
+    {
+      "$match": {
+        "fuentes.estado": {
+          "$eq": "ok"
+        }
+      },
+      "nReturned": 1395045,
+      "executionTimeMillisEstimate": 1361,
+      "expressionEvaluationPeakMemoryBytes": 512
+    },
+    {
+      "$group": {
+        "_id": {
+          "fuente": "$fuentes.nombre",
+          "categoria": "$veredicto.categoria"
+        },
+        "detecciones_totales": {
+          "$sum": "$fuentes.respuesta.detecciones"
+        },
+        "latencia_promedio_ms": {
+          "$avg": "$fuentes.latenciaMs"
+        },
+        "consultas": {
+          "$sum": {
+            "$const": 1
+          }
+        },
+        "$willBeMerged": false
+      },
+      "nReturned": 12,
+      "executionTimeMillisEstimate": 2238,
+      "maxAccumulatorMemoryUsageBytes": {
+        "detecciones_totales": 2400,
+        "latencia_promedio_ms": 2112,
+        "consultas": 2400
+      },
+      "totalOutputDataSizeBytes": 7544,
+      "usedDisk": false,
+      "spills": 0,
+      "spilledDataStorageSize": 0,
+      "spilledBytes": 0,
+      "spilledRecords": 0,
+      "peakTrackedMemBytes": 8288
+    }
+  ],
+  "queryShapeHash": "73A69669ABA5FFB25284BDD42438DCFE66DB9BEBF36C77025D895B37B2FD0E34",
+  "peakTrackedMemBytes": 8800,
+  "serverInfo": {
+    "host": "19607d46931a",
+    "port": 27017,
+    "version": "9.0.4",
+    "gitVersion": "64ade602b836c9adeffba7fa038c887ffab56196"
+  },
+  "serverParameters": {
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryFrameworkControl": "trySbeRestricted",
+    "internalQueryPlannerIgnoreIndexWithCollationForRegex": 1
+  },
+  "command": {
+    "aggregate": "analisis",
+    "pipeline": [
+      {
+        "$unwind": "$fuentes"
+      },
+      {
+        "$match": {
+          "fuentes.estado": "ok"
+        }
+      },
+      {
+        "$group": {
+          "_id": {
+            "fuente": "$fuentes.nombre",
+            "categoria": "$veredicto.categoria"
+          },
+          "detecciones_totales": {
+            "$sum": "$fuentes.respuesta.detecciones"
+          },
+          "latencia_promedio_ms": {
+            "$avg": "$fuentes.latenciaMs"
+          },
+          "consultas": {
+            "$sum": 1
+          }
+        }
+      }
+    ],
+    "cursor": {},
+    "$db": "enlaceseguro"
+  },
+  "ok": 1.0
+}

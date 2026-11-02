@@ -1,0 +1,28 @@
+GroupAggregate  (cost=431987.38..516470.62 rows=500000 width=136) (actual time=3508.030..6156.595 rows=12.00 loops=1)
+  Group Key: ((fuente.value ->> 'nombre'::text)), (((analisis.data -> 'veredicto'::text) ->> 'categoria'::text))
+  Buffers: shared hit=76 read=83672, temp read=79057 written=79146
+  ->  Gather Merge  (cost=431987.38..490220.62 rows=500000 width=96) (actual time=3459.879..5648.956 rows=1395045.00 loops=1)
+        Workers Planned: 2
+        Workers Launched: 2
+        Buffers: shared hit=76 read=83672, temp read=79057 written=79146
+        ->  Sort  (cost=430987.36..431508.19 rows=208333 width=96) (actual time=3266.097..3363.393 rows=465015.00 loops=3)
+              Sort Key: ((fuente.value ->> 'nombre'::text)), (((analisis.data -> 'veredicto'::text) ->> 'categoria'::text))
+              Sort Method: external merge  Disk: 105464kB
+              Buffers: shared hit=76 read=83672, temp read=79057 written=79146
+              Worker 0:  Sort Method: external merge  Disk: 108656kB
+              Worker 1:  Sort Method: external merge  Disk: 102128kB
+              ->  Nested Loop  (cost=0.01..401900.67 rows=208333 width=96) (actual time=329.494..1385.358 rows=465015.00 loops=3)
+                    Buffers: shared read=83672
+                    ->  Parallel Seq Scan on analisis  (cost=0.00..85755.33 rows=208333 width=1232) (actual time=7.385..296.890 rows=166666.67 loops=3)
+                          Buffers: shared read=83672
+                    ->  Function Scan on jsonb_array_elements fuente  (cost=0.01..1.50 rows=1 width=32) (actual time=0.004..0.005 rows=2.79 loops=500000)
+                          Filter: ((value ->> 'estado'::text) = 'ok'::text)
+                          Rows Removed by Filter: 0
+Planning:
+  Buffers: shared hit=209 read=41
+Planning Time: 1.228 ms
+JIT:
+  Functions: 21
+  Options: Inlining true, Optimization true, Expressions true, Deforming true
+  Timing: Generation 1.622 ms (Deform 0.338 ms), Inlining 414.235 ms, Optimization 288.038 ms, Emission 262.532 ms, Total 966.427 ms
+Execution Time: 6400.902 ms

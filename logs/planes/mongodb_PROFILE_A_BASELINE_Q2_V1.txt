@@ -1,0 +1,246 @@
+{
+  "explainVersion": "1",
+  "queryPlanner": {
+    "namespace": "enlaceseguro.analisis",
+    "parsedQuery": {
+      "$and": [
+        {
+          "estado": {
+            "$eq": "completo"
+          }
+        },
+        {
+          "fecha": {
+            "$gte": {
+              "$date": "2026-01-01T00:00:00Z"
+            }
+          }
+        }
+      ]
+    },
+    "indexFilterSet": false,
+    "queryHash": "A6E849AE",
+    "planCacheShapeHash": "A6E849AE",
+    "planCacheKey": "A7D4D15D",
+    "optimizationTimeMillis": 0,
+    "optimizationTimeMicros": 199,
+    "optimizedPipeline": true,
+    "maxIndexedOrSolutionsReached": false,
+    "maxIndexedAndSolutionsReached": false,
+    "maxScansToExplodeReached": false,
+    "prunedSimilarIndexes": false,
+    "winningPlan": {
+      "isCached": false,
+      "stage": "PROJECTION_DEFAULT",
+      "transformBy": {
+        "_id": true,
+        "urlInicial": true,
+        "duracionMs": true,
+        "veredicto": {
+          "categoria": true
+        }
+      },
+      "inputStage": {
+        "stage": "SORT",
+        "sortPattern": {
+          "duracionMs": -1
+        },
+        "memLimit": 104857600,
+        "limitAmount": 1000,
+        "type": "simple",
+        "inputStage": {
+          "stage": "FETCH",
+          "filter": {
+            "estado": {
+              "$eq": "completo"
+            }
+          },
+          "nss": "enlaceseguro.analisis",
+          "inputStage": {
+            "stage": "IXSCAN",
+            "nss": "enlaceseguro.analisis",
+            "keyPattern": {
+              "fecha": 1
+            },
+            "indexName": "fecha_1",
+            "isMultiKey": false,
+            "multiKeyPaths": {
+              "fecha": []
+            },
+            "isUnique": false,
+            "isSparse": false,
+            "isPartial": false,
+            "indexVersion": 2,
+            "direction": "forward",
+            "indexBounds": {
+              "fecha": [
+                "[new Date(1767225600000), new Date(9223372036854775807)]"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "rejectedPlans": []
+  },
+  "executionStats": {
+    "executionSuccess": true,
+    "nReturned": 1000,
+    "executionTimeMillis": 481,
+    "executionTimeMicros": 481819,
+    "totalKeysExamined": 227765,
+    "totalDocsExamined": 227765,
+    "executionStages": {
+      "isCached": false,
+      "stage": "PROJECTION_DEFAULT",
+      "nReturned": 1000,
+      "executionTimeMillisEstimate": 477,
+      "works": 228767,
+      "advanced": 1000,
+      "needTime": 227766,
+      "needYield": 0,
+      "saveState": 25,
+      "restoreState": 25,
+      "isEOF": 1,
+      "transformBy": {
+        "_id": true,
+        "urlInicial": true,
+        "duracionMs": true,
+        "veredicto": {
+          "categoria": true
+        }
+      },
+      "peakTrackedMemBytes": 0,
+      "inputStage": {
+        "stage": "SORT",
+        "nReturned": 1000,
+        "executionTimeMillisEstimate": 456,
+        "works": 228767,
+        "advanced": 1000,
+        "needTime": 227766,
+        "needYield": 0,
+        "saveState": 25,
+        "restoreState": 25,
+        "isEOF": 1,
+        "sortPattern": {
+          "duracionMs": -1
+        },
+        "memLimit": 104857600,
+        "limitAmount": 1000,
+        "type": "simple",
+        "totalDataSizeSorted": 976237,
+        "usedDisk": false,
+        "spills": 0,
+        "spilledRecords": 0,
+        "spilledBytes": 0,
+        "spilledDataStorageSize": 0,
+        "peakTrackedMemBytes": 976675,
+        "inputStage": {
+          "stage": "FETCH",
+          "filter": {
+            "estado": {
+              "$eq": "completo"
+            }
+          },
+          "nReturned": 182953,
+          "executionTimeMillisEstimate": 416,
+          "works": 227766,
+          "advanced": 182953,
+          "needTime": 44812,
+          "needYield": 0,
+          "saveState": 25,
+          "restoreState": 25,
+          "isEOF": 1,
+          "nss": "enlaceseguro.analisis",
+          "docsExamined": 227765,
+          "alreadyHasObj": 0,
+          "inputStage": {
+            "stage": "IXSCAN",
+            "nReturned": 227765,
+            "executionTimeMillisEstimate": 86,
+            "works": 227766,
+            "advanced": 227765,
+            "needTime": 0,
+            "needYield": 0,
+            "saveState": 25,
+            "restoreState": 25,
+            "isEOF": 1,
+            "nss": "enlaceseguro.analisis",
+            "keyPattern": {
+              "fecha": 1
+            },
+            "indexName": "fecha_1",
+            "isMultiKey": false,
+            "multiKeyPaths": {
+              "fecha": []
+            },
+            "isUnique": false,
+            "isSparse": false,
+            "isPartial": false,
+            "indexVersion": 2,
+            "direction": "forward",
+            "indexBounds": {
+              "fecha": [
+                "[new Date(1767225600000), new Date(9223372036854775807)]"
+              ]
+            },
+            "keysExamined": 227765,
+            "seeks": 1,
+            "dupsTested": 0,
+            "dupsDropped": 0,
+            "peakTrackedMemBytes": 0
+          }
+        }
+      }
+    }
+  },
+  "queryShapeHash": "35E02F81C8E49D1DD1EF5D281321413B4F5C6F43BE01A158A33974A19861C187",
+  "peakTrackedMemBytes": 976675,
+  "command": {
+    "aggregate": "analisis",
+    "pipeline": [
+      {
+        "$match": {
+          "estado": "completo",
+          "fecha": {
+            "$gte": {
+              "$date": "2026-01-01T00:00:00Z"
+            }
+          }
+        }
+      },
+      {
+        "$sort": {
+          "duracionMs": -1
+        }
+      },
+      {
+        "$limit": 1000
+      },
+      {
+        "$project": {
+          "urlInicial": 1,
+          "veredicto.categoria": 1,
+          "duracionMs": 1
+        }
+      }
+    ],
+    "cursor": {},
+    "allowDiskUse": false,
+    "$db": "enlaceseguro"
+  },
+  "serverInfo": {
+    "host": "c2773ab3bd7d",
+    "port": 27017,
+    "version": "9.0.4",
+    "gitVersion": "64ade602b836c9adeffba7fa038c887ffab56196"
+  },
+  "serverParameters": {
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryFrameworkControl": "trySbeRestricted",
+    "internalQueryPlannerIgnoreIndexWithCollationForRegex": 1
+  },
+  "ok": 1.0
+}

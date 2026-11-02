@@ -1,0 +1,20 @@
+Limit  (cost=89901.07..89998.09 rows=833 width=128) (actual time=677.202..680.351 rows=1000.00 loops=1)
+  Buffers: shared hit=638 read=83108
+  ->  Gather Merge  (cost=89901.07..89998.09 rows=833 width=128) (actual time=677.200..680.294 rows=1000.00 loops=1)
+        Workers Planned: 2
+        Workers Launched: 2
+        Buffers: shared hit=638 read=83108
+        ->  Sort  (cost=88901.05..88901.91 rows=347 width=128) (actual time=673.958..674.006 rows=632.00 loops=3)
+              Sort Key: (((data ->> 'duracionMs'::text))::numeric) DESC
+              Sort Method: top-N heapsort  Memory: 277kB
+              Buffers: shared hit=638 read=83108
+              Worker 0:  Sort Method: top-N heapsort  Memory: 273kB
+              Worker 1:  Sort Method: top-N heapsort  Memory: 275kB
+              ->  Parallel Seq Scan on analisis  (cost=0.00..88886.41 rows=347 width=128) (actual time=0.228..608.969 rows=60984.33 loops=3)
+                    Filter: (((data ->> 'estado'::text) = 'completo'::text) AND (((data ->> 'fecha'::text))::timestamp with time zone >= '2026-01-01 00:00:00+00'::timestamp with time zone))
+                    Rows Removed by Filter: 105682
+                    Buffers: shared hit=564 read=83108
+Planning:
+  Buffers: shared hit=160
+Planning Time: 0.559 ms
+Execution Time: 680.445 ms

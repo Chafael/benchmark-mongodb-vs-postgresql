@@ -1,7 +1,6 @@
 data/
 __pycache__/
 .venv/
-results/
-logs/
-extras/salida/
+results/piloto.csv
+results/estado_piloto.json
 extras/monitor_cpu.csv

@@ -1,0 +1,116 @@
+{
+  "fila_csv": {
+    "timestamp_epoch": 1793541649,
+    "engine": "postgresql",
+    "profile": "PROFILE_C_SEVERE",
+    "query_id": "Q1",
+    "concurrency": 50,
+    "run_number": 1,
+    "throughput_qps": 0.0,
+    "latency_p50_ms": "",
+    "latency_p95_ms": "",
+    "latency_p99_ms": "",
+    "cpu_throttled_seconds": 1504.601,
+    "max_rss_mb": 908.4,
+    "disk_spill": "false",
+    "status": "oom"
+  },
+  "motor": {
+    "version": "PostgreSQL 18.6 (Debian 18.6-1.pgdg13+2) on x86_64-pc-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit",
+    "shared_buffers": "128MB",
+    "work_mem_default": "4MB"
+  },
+  "docker_antes": {
+    "oom_killed": false,
+    "running": true,
+    "exit_code": 0,
+    "image": "postgres:18.6",
+    "limits_reales": {
+      "cpus": 1.0,
+      "memory_bytes": 1073741824,
+      "memory_swap_bytes": 1073741824,
+      "memory_swappiness": null
+    }
+  },
+  "docker_despues": {
+    "oom_killed": true,
+    "running": true,
+    "exit_code": 0,
+    "image": "postgres:18.6",
+    "limits_reales": {
+      "cpus": 1.0,
+      "memory_bytes": 1073741824,
+      "memory_swap_bytes": 1073741824,
+      "memory_swappiness": null
+    }
+  },
+  "ventana": {
+    "inicio": 1793541649.4632223,
+    "fin": 1793541949.4632223,
+    "warmup_s": 60,
+    "medicion_s": 300
+  },
+  "consultas_completadas": 0,
+  "consultas_fuera_de_ventana": 0,
+  "errores_en_ventana": 704,
+  "clientes_cortados_al_final": 0,
+  "ejemplos_error": [
+    "OperationalError: consuming input failed: server closed the connection unexpectedly\n\tThis probably means the server terminated abnormally\n\tbefore or while processing the request.",
+    "OperationalError: consuming input failed: server closed the connection unexpectedly\n\tThis probably means the server terminated abnormally\n\tbefore or while processing the request.",
+    "OperationalError: consuming input failed: server closed the connection unexpectedly\n\tThis probably means the server terminated abnormally\n\tbefore or while processing the request.",
+    "OperationalError: the connection is closed",
+    "OperationalError: the connection is closed"
+  ],
+  "throttling": {
+    "prometheus_s": null,
+    "cgroup_cpu_stat_s": 1504.601483
+  },
+  "rss_max_bytes": 952512512,
+  "rss_fuente": "cgroup_memory_stat",
+  "throttling_fuente": "cgroup_cpu_stat",
+  "cpu_usage_s": {
+    "prometheus_s": null,
+    "cgroup_cpu_stat_s": 229.477358
+  },
+  "rss_serie_bytes": [
+    [
+      112.1,
+      91435008
+    ],
+    [
+      114.3,
+      67915776
+    ],
+    [
+      116.4,
+      46546944
+    ],
+    [
+      120.3,
+      669368320
+    ],
+    [
+      207.3,
+      952512512
+    ],
+    [
+      209.4,
+      179412992
+    ],
+    [
+      211.7,
+      2469888
+    ],
+    [
+      213.9,
+      131317760
+    ],
+    [
+      347.4,
+      488820736
+    ]
+  ],
+  "spill": {
+    "temp_files": null
+  }
+}
